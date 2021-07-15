@@ -1,5 +1,7 @@
 import Head from 'next/head';
 
+import Header from '@components/Header';
+
 export default function Home() {
   return (
     <>
@@ -8,7 +10,7 @@ export default function Home() {
         <meta name="description" content="A Cryptocurrencies tracker app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <h1>Coin Tracker</h1>
+      <Header />
     </>
   );
 }
