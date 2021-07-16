@@ -1,17 +1,15 @@
 import type { AppProps } from 'next/app';
 import 'normalize.css';
 import GlobalStyles from '@styles/GlobalStyles';
-import Container from '@components/Container';
+import { Provider } from 'react-redux';
+import store from 'store';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <>
+    <Provider store={store}>
       <GlobalStyles />
       <Component {...pageProps} />
-      <Container>
-        <p>Coin List</p>
-      </Container>
-    </>
+    </Provider>
   );
 }
 export default MyApp;
