@@ -1,8 +1,6 @@
 import Head from 'next/head';
 
-import Header from '@components/Header';
-import CoinList from '@components/CoinList';
-import Container from '@components/Container';
+import CoinListCard from '@fragments/home/CoinListCard';
 
 export default function Home() {
   return (
@@ -12,10 +10,7 @@ export default function Home() {
         <meta name="description" content="A Cryptocurrencies tracker app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Header />
-      <Container>
-        <CoinList />
-      </Container>
+      <CoinListCard />
     </>
   );
 }

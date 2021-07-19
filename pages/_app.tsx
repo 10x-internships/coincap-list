@@ -1,14 +1,18 @@
 import type { AppProps } from 'next/app';
+import { Provider } from 'react-redux';
 import 'normalize.css';
 import GlobalStyles from '@styles/GlobalStyles';
-import { Provider } from 'react-redux';
-import store from 'store';
+import Layout from '@components/Layout';
+
+import store from 'redux/store';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       <GlobalStyles />
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </Provider>
   );
 }

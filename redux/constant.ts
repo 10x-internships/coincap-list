@@ -1,0 +1,4 @@
+const FIRST_LOAD = 'FIRST_LOAD';
+const LOAD_MORE = 'LOAD_MORE';
+
+export { FIRST_LOAD, LOAD_MORE };
