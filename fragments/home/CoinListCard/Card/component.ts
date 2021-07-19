@@ -31,3 +31,10 @@ export const LoadMoreBox = styled.div`
   display: grid;
   place-items: center;
 `;
+
+export const ErrorMessage = styled.div`
+  width: 100%;
+  height: 40vh;
+  display: grid;
+  place-items: center;
+`;

@@ -7,7 +7,7 @@ export const StyledTd = styled.td<{
 }>`
   padding: 1rem 0;
   text-align: ${(props) => props.textAlign || 'left'};
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid ${(props) => props.theme.colors.borderColor};
 
   @media screen and (min-width: 1024px) {
     padding: 2rem 0;
@@ -25,5 +25,5 @@ export const StyledTd = styled.td<{
 `;
 
 export const StyledPercentChange = styled(StyledTd)<{ color: 'red' | 'green' }>`
-  color: ${({ color = 'inherit' }) => `var(--color-${color})`};
+  color: ${({ color, theme }) => theme.colors[color] || 'inherit'};
 `;

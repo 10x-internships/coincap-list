@@ -1,18 +1,21 @@
 import { useRef, useEffect } from 'react';
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Loader from '@components/Loader';
 import Container from '@components/Container';
-import CoinTable from '../CoinTable';
 import useIntersection from 'hooks/useIntersection';
+import { getMoreCoinData } from 'redux/actions';
+import { selectCoinList, selectIsError, selectIsLoadMoreEnded, selectOffset } from 'redux/selectors';
 
-import { Wrapper, CoinListTitle, LoadMoreBox } from './component';
-import { loadMoreCoinData } from 'redux/actions';
+import { Wrapper, CoinListTitle, LoadMoreBox, ErrorMessage } from './component';
+import CoinTable from '../CoinTable';
 
 const CoinList = () => {
-  const coinList = useSelector((state: RootStateOrAny) => state.coin.data);
-  const offset = useSelector((state: RootStateOrAny) => state.coin.offset);
   const dispatch = useDispatch();
+  const coinList = useSelector(selectCoinList);
+  const offset = useSelector(selectOffset);
+  const isError = useSelector(selectIsError);
+  const isLoadMoreEnded = useSelector(selectIsLoadMoreEnded);
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const isVisible = useIntersection(loadMoreRef, {
@@ -22,18 +25,31 @@ const CoinList = () => {
 
   useEffect(() => {
     if (isVisible && coinList.length !== 0) {
-      dispatch(loadMoreCoinData(offset));
+      dispatch(getMoreCoinData(offset));
     }
   }, [isVisible]);
+
+  if (isError) {
+    return (
+      <Container>
+        <Wrapper>
+          <ErrorMessage>Something went wrong, please comeback later 😁</ErrorMessage>
+        </Wrapper>
+      </Container>
+    );
+  }
 
   return (
     <Container>
       <Wrapper>
         <CoinListTitle>Coin Ranking</CoinListTitle>
         <CoinTable />
-        <LoadMoreBox ref={loadMoreRef}>
-          <Loader width="50px" height="50px" />
-        </LoadMoreBox>
+        {isLoadMoreEnded && <LoadMoreBox>End of result</LoadMoreBox>}
+        {!isLoadMoreEnded && (
+          <LoadMoreBox ref={loadMoreRef}>
+            <Loader width="50px" height="50px" />
+          </LoadMoreBox>
+        )}
       </Wrapper>
     </Container>
   );

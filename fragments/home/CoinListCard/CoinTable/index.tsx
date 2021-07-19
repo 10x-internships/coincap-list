@@ -6,24 +6,26 @@ import CoinItem from '../CoinItem';
 import { CoinItemTypes } from '../types';
 import { StyledTable, StyledTh, LoaderWrapper } from './component';
 
-import { updateCoinData } from 'redux/actions';
+import { getCoinData } from 'redux/actions';
+import { selectCoinList, selectIsLoading } from 'redux/selectors';
 
 const CoinTable = () => {
-  const coinList = useSelector((state: RootStateOrAny) => state.coin.data);
   const dispatch = useDispatch();
+  const coinList = useSelector(selectCoinList);
+  const isLoading = useSelector(selectIsLoading);
 
   useEffect(() => {
-    dispatch(updateCoinData());
+    dispatch(getCoinData());
   }, []);
 
   return (
     <>
-      {coinList.length === 0 && (
+      {isLoading && (
         <LoaderWrapper>
           <Loader width="100px" height="100px" />
         </LoaderWrapper>
       )}
-      {coinList.length !== 0 && (
+      {!isLoading && (
         <StyledTable>
           <thead>
             <tr>
