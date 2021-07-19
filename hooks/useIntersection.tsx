@@ -1,9 +1,6 @@
 import { useState, useEffect, RefObject } from 'react';
 
-const useIntersection = (
-  elementRef: RefObject<Element>,
-  options: IntersectionObserverInit | undefined
-) => {
+const useIntersection = (elementRef: RefObject<Element>, options: IntersectionObserverInit | undefined) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -19,7 +16,7 @@ const useIntersection = (
     return () => {
       observer.disconnect();
     };
-  }, [elementRef, options]);
+  }, [elementRef]);
 
   return isVisible;
 };
