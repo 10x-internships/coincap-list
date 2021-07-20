@@ -1,18 +1,22 @@
-import * as actionTypes from '../constant';
+import getData from '../constants/getData';
+import { LOAD_MORE_ENDED } from '../constants/coinList';
 import { BASE_URL, LIMIT_REQUEST } from '../api';
 import { Dispatch } from 'redux';
 
 export const getCoinData = () => {
   return async (dispatch: Dispatch) => {
     try {
-      dispatch({ type: actionTypes.GET_COINLIST_REQUEST });
+      dispatch({ type: getData.REQUEST });
       const res = await fetch(`${BASE_URL}?limit=${LIMIT_REQUEST}`);
-      if (!res.ok) throw new Error();
 
-      const coinData = await res.json();
-      dispatch({ type: actionTypes.GET_COINLIST_SUCCESS, payload: coinData.data });
+      if (res.status === 200) {
+        const coinData = await res.json();
+        dispatch({ type: getData.SUCCESS, payload: coinData.data });
+      } else {
+        throw new Error();
+      }
     } catch (err) {
-      dispatch({ type: actionTypes.GET_COINLIST_FAILURE });
+      dispatch({ type: getData.FAILURE });
     }
   };
 };
@@ -22,15 +26,16 @@ export const getMoreCoinData = (offset: number) => {
     try {
       const res = await fetch(`${BASE_URL}?limit=${LIMIT_REQUEST}&offset=${offset}`);
       const coinData = await res.json();
-      if (!res.ok) throw new Error();
 
-      if (coinData.data.length !== 0) {
-        dispatch({ type: actionTypes.GET_MORE_COINLIST, payload: coinData.data });
+      if (res.status === 200) {
+        dispatch(
+          coinData.data.length !== 0 ? { type: getData.SUCCESS, payload: coinData.data } : { type: LOAD_MORE_ENDED }
+        );
       } else {
-        dispatch({ type: actionTypes.GET_MORE_ENDED });
+        throw new Error();
       }
     } catch (err) {
-      dispatch({ type: actionTypes.GET_COINLIST_FAILURE });
+      dispatch({ type: getData.FAILURE });
     }
   };
 };

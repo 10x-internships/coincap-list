@@ -1,0 +1,1 @@
+export const LOAD_MORE_ENDED = 'LOAD_MORE_ENDED';

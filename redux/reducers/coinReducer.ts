@@ -1,5 +1,7 @@
 import { CoinItemTypes } from '@fragments/home/CoinListCard';
-import * as actionTypes from '../constant';
+import getData from '../constants/getData';
+import { LOAD_MORE_ENDED } from '../constants/coinList';
+import { LIMIT_REQUEST } from '../api';
 
 type CoinState = {
   data: CoinItemTypes[];
@@ -24,33 +26,27 @@ const initialCoinState: CoinState = {
 
 const coinReducer = (state = initialCoinState, action: CoinAction): CoinState => {
   switch (action.type) {
-    case actionTypes.GET_COINLIST_REQUEST:
+    case getData.REQUEST:
       return {
         ...state,
         isLoading: true,
       };
-    case actionTypes.GET_COINLIST_SUCCESS:
-      return {
-        ...state,
-        data: action.payload,
-        offset: state.offset + 50,
-        isLoading: false,
-      };
-    case actionTypes.GET_MORE_COINLIST:
+    case getData.SUCCESS:
       return {
         ...state,
         data: [...state.data, ...action.payload],
-        offset: state.offset + 50,
+        offset: state.offset + LIMIT_REQUEST,
+        isLoading: false,
       };
-    case actionTypes.GET_MORE_ENDED:
-      return {
-        ...state,
-        isLoadMoreEnded: true,
-      };
-    case actionTypes.GET_COINLIST_FAILURE:
+    case getData.FAILURE:
       return {
         ...state,
         isError: true,
+      };
+    case LOAD_MORE_ENDED:
+      return {
+        ...state,
+        isLoadMoreEnded: true,
       };
     default:
       return state;
