@@ -44,7 +44,6 @@ const CoinList = () => {
       <Wrapper>
         <CoinListTitle>Coin Ranking</CoinListTitle>
         <CoinTable />
-        {isLoadMoreEnded && <LoadMoreBox>End of result</LoadMoreBox>}
         {!isLoadMoreEnded && (
           <LoadMoreBox ref={loadMoreRef}>
             <Loader width="50px" height="50px" />
