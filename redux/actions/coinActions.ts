@@ -1,41 +1,62 @@
-import getData from '../constants/getData';
-import { LOAD_MORE_ENDED } from '../constants/coinList';
-import { BASE_URL, LIMIT_REQUEST } from '../api';
 import { Dispatch } from 'redux';
+import { AxiosRequestConfig } from 'axios';
 
-export const getCoinData = () => {
+import GET_COINLIST, { LOAD_MORE_ENDED } from '../constants/coinList';
+import { LIMIT_REQUEST, coinCapAPI } from '../api';
+
+interface CoinListType extends AxiosRequestConfig {
+  type: {
+    REQUEST: string;
+    SUCCESS: string;
+    FAILURE: string;
+  };
+  haveLoading?: boolean;
+}
+
+const fetchCoinList = (config: CoinListType) => {
+  const { url, data, headers, params, type, method, haveLoading = true } = config;
+
   return async (dispatch: Dispatch) => {
+    haveLoading && dispatch({ type: type.REQUEST });
     try {
-      dispatch({ type: getData.REQUEST });
-      const res = await fetch(`${BASE_URL}?limit=${LIMIT_REQUEST}`);
-
-      if (res.status === 200) {
-        const coinData = await res.json();
-        dispatch({ type: getData.SUCCESS, payload: coinData.data });
-      } else {
-        throw new Error();
+      const response = await coinCapAPI({
+        method,
+        url,
+        params,
+        headers,
+        data,
+      });
+      if (response.status === 200) {
+        dispatch(
+          response.data.data.length !== 0
+            ? { type: GET_COINLIST.SUCCESS, payload: response.data.data }
+            : { type: LOAD_MORE_ENDED }
+        );
       }
     } catch (err) {
-      dispatch({ type: getData.FAILURE });
+      dispatch({ type: type.FAILURE });
     }
   };
 };
 
-export const getMoreCoinData = (offset: number) => {
-  return async (dispatch: Dispatch) => {
-    try {
-      const res = await fetch(`${BASE_URL}?limit=${LIMIT_REQUEST}&offset=${offset}`);
-      const coinData = await res.json();
+export const getCoinData = () => {
+  return fetchCoinList({
+    url: '/assets',
+    type: GET_COINLIST,
+    params: {
+      limit: LIMIT_REQUEST,
+    },
+  });
+};
 
-      if (res.status === 200) {
-        dispatch(
-          coinData.data.length !== 0 ? { type: getData.SUCCESS, payload: coinData.data } : { type: LOAD_MORE_ENDED }
-        );
-      } else {
-        throw new Error();
-      }
-    } catch (err) {
-      dispatch({ type: getData.FAILURE });
-    }
-  };
+export const getMoreCoinData = (offset: number) => {
+  return fetchCoinList({
+    url: '/assets',
+    type: GET_COINLIST,
+    params: {
+      limit: LIMIT_REQUEST,
+      offset,
+    },
+    haveLoading: false,
+  });
 };
