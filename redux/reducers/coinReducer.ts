@@ -37,7 +37,7 @@ const coinReducer = (state = initialCoinState, action: CoinAction): CoinState =>
         offset: state.offset + LIMIT_REQUEST,
         isLoading: false,
       };
-    case LOAD_MORE_ENDED:
+    case GET_COINLIST.ENDED:
       return {
         ...state,
         isLoadMoreEnded: true,
